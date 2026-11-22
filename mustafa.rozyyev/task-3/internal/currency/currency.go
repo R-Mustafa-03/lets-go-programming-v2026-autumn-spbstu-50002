@@ -20,9 +20,11 @@ type Rate struct {
 
 func Convert(source []XMLRate) ([]Rate, error) {
 	rates := make([]Rate, 0, len(source))
+
 	for _, item := range source {
 		charCode := strings.TrimSpace(item.CharCode)
 		valueText := strings.ReplaceAll(strings.TrimSpace(item.Value), ",", ".")
+
 		value, err := strconv.ParseFloat(valueText, 64)
 		if err != nil {
 			return nil, fmt.Errorf("parse value for currency %s: %w", charCode, err)

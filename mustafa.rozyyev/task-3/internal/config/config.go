@@ -1,6 +1,7 @@
 package config
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"os"
@@ -23,14 +24,17 @@ func Load(path string) (Config, error) {
 	}
 
 	var cfg Config
-	decoder := yaml.NewDecoder(strings.NewReader(string(data)))
+
+	decoder := yaml.NewDecoder(bytes.NewReader(data))
 	decoder.KnownFields(true)
+
 	if err := decoder.Decode(&cfg); err != nil {
 		return Config{}, fmt.Errorf("decode config %q: %w", path, err)
 	}
 
 	cfg.InputFile = strings.TrimSpace(cfg.InputFile)
 	cfg.OutputFile = strings.TrimSpace(cfg.OutputFile)
+
 	if cfg.InputFile == "" || cfg.OutputFile == "" {
 		return Config{}, errMissingConfigFields
 	}
